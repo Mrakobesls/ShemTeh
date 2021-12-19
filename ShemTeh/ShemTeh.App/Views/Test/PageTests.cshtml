@@ -1,0 +1,49 @@
+﻿@using ShemTeh.App.Models.Pagination.Test
+@model TestsViewPage
+
+<div>
+    @Html.ActionLink("Создать тест", "CreateTest", "Test", null, new { type = "button", @class = "btn btn-outline-dark" })
+</div>
+</div>
+<br />
+<div class="text-center">
+    @if (Model.Tests.Count() == 0)
+    {
+        <div>Нет тестов</div>
+    }
+    else
+    {
+        <table class="table">
+            <tr>
+                <th>Тест</th>
+                <th></th>
+            </tr>
+            @foreach (var test in Model.Tests)
+            {
+                <tr>
+                    <td>@test.Name</td>
+                    <td>
+                        @Html.ActionLink("Открыть", "EditTest", "Test", new { testId = test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <div class="text-center">
+            @if (Model.Pager.HasPreviousPage)
+            {
+                <i class="arrow left"></i>
+                @Html.ActionLink((Model.Pager.PageNumber - 1).ToString(), "PageTests", "Test", new { page = Model.Pager.PageNumber - 1 })
+            }
+            &nbsp;
+            @Model.Pager.PageNumber
+            &nbsp;
+            @if (Model.Pager.HasNextPage)
+            {
+                @Html.ActionLink((Model.Pager.PageNumber + 1).ToString(), "PageTests", "Test", new { page = Model.Pager.PageNumber + 1 })
+                <i class="arrow right"></i>
+            }
+        </div>
+    }
+
+</div>

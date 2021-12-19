@@ -1,7 +1,8 @@
 ﻿using ShemTeh.Business.Models;
-using ShemTeh.Data.UnitOfWork.Interfaces;
+using ShemTeh.Data.Models;
+using ShemTeh.Data.UnitOfWork;
 
-namespace ShemTeh.Business.Servises.Intefaces
+namespace ShemTeh.Business.Servises
 {
     public class QuestionAnswerService : IQuestionAnswerService
     {
@@ -11,9 +12,14 @@ namespace ShemTeh.Business.Servises.Intefaces
             _uow = unitOfWork;
         }
 
-        public void Add(QuestionAnswerDto entity)
+        public int Add(QuestionAnswerDto entity)
         {
-            throw new NotImplementedException();
+            QuestionAnswer entityDb = entity;
+            _uow.QuestionAnswers.Create(entityDb);
+
+            _uow.SaveChanges();
+
+            return entityDb.Id;
         }
 
         public void Delete(int id)
@@ -31,9 +37,18 @@ namespace ShemTeh.Business.Servises.Intefaces
             throw new NotImplementedException();
         }
 
+        public List<QuestionAnswerDto> ReadAllByQuestionId(int questionId)
+        {
+            return _uow.QuestionAnswers.ReadAll()
+                .Where(x => x.QuestionId == questionId)
+                .Select(qa => (QuestionAnswerDto)qa).ToList(); ;
+        }
+
         public void Update(QuestionAnswerDto entity)
         {
-            throw new NotImplementedException();
+            _uow.QuestionAnswers.Update(entity);
+
+            _uow.SaveChanges();
         }
     }
 }

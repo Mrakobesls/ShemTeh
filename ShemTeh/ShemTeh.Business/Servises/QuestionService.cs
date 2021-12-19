@@ -1,7 +1,8 @@
 ﻿using ShemTeh.Business.Models;
-using ShemTeh.Data.UnitOfWork.Interfaces;
+using ShemTeh.Data.Models;
+using ShemTeh.Data.UnitOfWork;
 
-namespace ShemTeh.Business.Servises.Intefaces
+namespace ShemTeh.Business.Servises
 {
     public class QuestionService : IQuestionService
     {
@@ -10,14 +11,16 @@ namespace ShemTeh.Business.Servises.Intefaces
         {
             _uow = unitOfWork;
         }
-        public void Add(QuestionAnswerDto entity)
-        {
-            throw new NotImplementedException();
-        }
 
-        public void Add(QuestionDto entity)
+        public int Add(QuestionDto entity)
         {
-            throw new NotImplementedException();
+            Question entityDb = entity;
+            entityDb.TypeId = 2;
+            _uow.Questions.Create(entityDb);
+
+            _uow.SaveChanges();
+
+            return entityDb.Id;
         }
 
         public void Delete(int id)
@@ -25,44 +28,28 @@ namespace ShemTeh.Business.Servises.Intefaces
             throw new NotImplementedException();
         }
 
-        public QuestionAnswerDto Read(int id)
+        public QuestionDto Read(int id)
         {
-            throw new NotImplementedException();
+            return _uow.Questions.Read(id);
         }
 
-        public List<QuestionAnswerDto> ReadAll()
+        public List<QuestionDto> ReadAll()
         {
-            throw new NotImplementedException();
-        }
-
-        public void Update(QuestionAnswerDto entity)
-        {
-            throw new NotImplementedException();
+            return (List<QuestionDto>)_uow.Questions.ReadAll();
         }
 
         public void Update(QuestionDto entity)
         {
-            throw new NotImplementedException();
+            _uow.Questions.Update(entity);
+
+            _uow.SaveChanges();
         }
 
-        QuestionDto IQuestionService.Read(int id)
+        public List<QuestionDto> ReadAllByTestId(int testId)
         {
-            throw new NotImplementedException();
-        }
-
-        QuestionDto IGenericService<QuestionDto>.Read(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<QuestionDto> IQuestionService.ReadAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        List<QuestionDto> IGenericService<QuestionDto>.ReadAll()
-        {
-            throw new NotImplementedException();
+            return _uow.Questions.ReadAll()
+                .Where(x => x.TestId == testId)
+                .Select(q => (QuestionDto)q).ToList();
         }
     }
 }

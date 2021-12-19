@@ -4,14 +4,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using ShemTeh.Data;
 
 #nullable disable
 
 namespace ShemTeh.Data.Migrations
 {
     [DbContext(typeof(StDbContext))]
-    [Migration("20211211182353_Initial")]
-    partial class Initial
+    [Migration("20211219144337_2")]
+    partial class _2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,7 +72,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Companies");
+                    b.ToTable("QuestionAnswers");
                 });
 
             modelBuilder.Entity("ShemTeh.Data.Models.QuestionType", b =>
@@ -85,9 +86,6 @@ namespace ShemTeh.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

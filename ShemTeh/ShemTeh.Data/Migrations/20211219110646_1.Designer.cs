@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ShemTeh.Data.Migrations
 {
     [DbContext(typeof(StDbContext))]
-    [Migration("20211211182353_Initial")]
-    partial class Initial
+    [Migration("20211219110646_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,7 +71,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Companies");
+                    b.ToTable("QuestionAnswers");
                 });
 
             modelBuilder.Entity("ShemTeh.Data.Models.QuestionType", b =>

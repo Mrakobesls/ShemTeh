@@ -1,7 +1,4 @@
-﻿using ShemTeh.Data.Repositories.Interfaces;
-using System.Linq;
-
-namespace ShemTeh.Data.Repositories
+﻿namespace ShemTeh.Data.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T>
         where T : class

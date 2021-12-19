@@ -1,0 +1,58 @@
+﻿@using ShemTeh.App.Models.Test
+@model EditQuestionRequest
+
+@using (Html.BeginForm("EditQuestion", "Test", FormMethod.Post))
+{
+    <div>
+        @Html.HiddenFor(model => model.Question.Id)
+        @Html.HiddenFor(model => model.Question.TestId)
+        @Html.HiddenFor(model => model.Question.TypeId)
+        <div class="form-group">
+            <label asp-for="@Model.Question.Name">Название вопроса</label><br />
+            @Html.EditorFor(model => model.Question.Name)
+            <br />
+        </div>
+    </div>
+    <input type="submit" value="Обновить" class="btn btn-outline-dark" />
+    <div class="text-center">
+        <table id="answers" class="table">
+            <tr>
+                <th>Номер</th>
+                <th>Название</th>
+                <th>Правильный?</th>
+            </tr>
+            @{
+                //int number = 0;
+                //foreach (var answer in Model.Answers)
+                //{
+                //    <tr>
+                //        <td>@(++number)</td>
+                //        <td>@answer.Name</td>
+                //        <td>
+                //            @Html.ActionLink("Редактировать вопрос", "EditQuestion", "Test", new { Id = answer.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+                //        </td>
+                //        <td>
+                //            @Html.CheckBoxFor(answer => answer.)
+                //        </td>
+                //    </tr>
+                //}
+                for (int i = 0; i < Model.Answers.Count; ++i)
+                {
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@Html.EditorFor(model => model.Answers[i].Name)</td>
+                        @*<td>
+                            @Html.ActionLink("Редактировать вопрос", "EditQuestion", "Test", new { Id = model.Answers[i].Id }, new { type = "button", @class = "btn btn-outline-dark" })
+                            </td>*@
+                        <td>
+                            @Html.CheckBoxFor(model => model.Answers[i].IsCorrect)
+                        </td>
+                    </tr>
+                    @Html.HiddenFor(model => model.Answers[i].Id)
+                    @Html.HiddenFor(model => model.Answers[i].QuestionId)
+                }
+            }
+        </table>
+    </div>
+    @Html.ActionLink("Добавить вариант ответа", "EditQuestion", "Test", new { questionId = Model.Question.Id, newRows = Model.Answers.Count + 1 }, new { type = "button", @class = "btn btn-outline-dark" })
+}

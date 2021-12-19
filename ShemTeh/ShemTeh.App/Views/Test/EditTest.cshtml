@@ -1,0 +1,42 @@
+﻿@using ShemTeh.App.Models.Test
+@model EditTestRequest
+
+@using (Html.BeginForm("EditTest", "Test", FormMethod.Post))
+{
+    <div>
+        @Html.HiddenFor(model => model.Test.Id)
+        @Html.HiddenFor(model => model.Questions)
+        <div class="form-group">
+            <label asp-for="@Model.Test.Name">Название теста</label><br />
+            @Html.EditorFor(model => model.Test.Name)
+            <br />
+        </div>
+        <input type="submit" value="Обновить" class="btn btn-outline-dark" />
+    </div>
+}
+<br/>
+<div>
+    @Html.ActionLink("Добавить вопрос", "CreateQuestion", "Test", new { id = Model.Test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+</div>
+
+<div class="text-center">
+    <table class="table legend">
+        <tr>
+            <th>Номер</th>
+            <th>Название</th>
+        </tr>
+        @{
+            int number = 0;
+            foreach (var question in Model.Questions)
+            {
+                <tr>
+                    <td>@(++number)</td>
+                    <td>@question.Name</td>
+                    <td>
+                        @Html.ActionLink("Редактировать вопрос", "EditQuestion", "Test", new { questionId = question.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShemTeh.Data.Models;
 
-namespace ShemTeh
+namespace ShemTeh.Data
 {
     public class StDbContext : DbContext
     {

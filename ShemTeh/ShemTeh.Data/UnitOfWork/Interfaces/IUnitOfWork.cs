@@ -1,7 +1,7 @@
 ﻿using ShemTeh.Data.Models;
-using ShemTeh.Data.Repositories.Interfaces;
+using ShemTeh.Data.Repositories;
 
-namespace ShemTeh.Data.UnitOfWork.Interfaces
+namespace ShemTeh.Data.UnitOfWork
 {
     public interface IUnitOfWork
     {

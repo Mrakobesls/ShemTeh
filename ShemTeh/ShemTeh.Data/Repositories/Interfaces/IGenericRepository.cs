@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace ShemTeh.Data.Repositories.Interfaces
+namespace ShemTeh.Data.Repositories
 {
     public interface IGenericRepository<T>
     {

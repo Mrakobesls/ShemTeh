@@ -2,7 +2,7 @@
 {
     public interface IGenericService<T>
     {
-        void Add(T entity);
+        int Add(T entity);
         T Read(int id);
         List<T> ReadAll();
         void Delete(int id);

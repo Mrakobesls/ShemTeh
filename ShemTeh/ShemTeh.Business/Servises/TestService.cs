@@ -1,7 +1,8 @@
 ﻿using ShemTeh.Business.Models;
-using ShemTeh.Data.UnitOfWork.Interfaces;
+using ShemTeh.Data.Models;
+using ShemTeh.Data.UnitOfWork;
 
-namespace ShemTeh.Business.Servises.Intefaces
+namespace ShemTeh.Business.Servises
 {
     public class TestService : ITestService
     {
@@ -12,19 +13,30 @@ namespace ShemTeh.Business.Servises.Intefaces
         }
 
 
-        public void Add(TestDto entity)
+        public int Add(TestDto entity)
         {
-            throw new NotImplementedException();
+            Test entityDb = entity;
+            _uow.Tests.Create(entityDb);
+
+            _uow.SaveChanges();
+
+            return entityDb.Id;
         }
 
         public TestDto Read(int id)
         {
-            throw new NotImplementedException();
+            return _uow.Tests.Read(id);
         }
 
         public List<TestDto> ReadAll()
         {
-            throw new NotImplementedException();
+            return _uow.Tests.ReadAll()
+                .Select(c => (TestDto)c).ToList();
+        }
+
+        public TestDto ReadByName(string name)
+        {
+            return _uow.Tests.ReadAll().FirstOrDefault(x => x.Name == name);
         }
 
         public void Delete(int id)
@@ -34,7 +46,9 @@ namespace ShemTeh.Business.Servises.Intefaces
 
         public void Update(TestDto entity)
         {
-            throw new NotImplementedException();
+            _uow.Tests.Update(entity);
+
+            _uow.SaveChanges();
         }
 
         public int TestsCount()
@@ -44,11 +58,9 @@ namespace ShemTeh.Business.Servises.Intefaces
 
         public List<TestDto> GetAllTestsPage(int pageSize, int page)
         {
-            return _uow.Tests.ReadAll().Skip((page - 1) * pageSize).Take(pageSize).Select(c => new TestDto()
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList();
+            return _uow.Tests.ReadAll()
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .Select(t => (TestDto)t).ToList();
         }
     }
 }

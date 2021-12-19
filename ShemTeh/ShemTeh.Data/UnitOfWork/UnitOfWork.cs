@@ -1,8 +1,5 @@
 ﻿using ShemTeh.Data.Models;
 using ShemTeh.Data.Repositories;
-using ShemTeh.Data.Repositories.Interfaces;
-using ShemTeh.Data.UnitOfWork.Interfaces;
-using System;
 
 namespace ShemTeh.Data.UnitOfWork
 {
