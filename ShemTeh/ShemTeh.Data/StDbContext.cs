@@ -23,6 +23,13 @@ namespace ShemTeh.Data
                 .HasKey(k => new { k.UserId, k.TestId });
             modelBuilder.Entity<TestResult>()
                 .HasKey(k => new { k.UserId, k.TestId });
+
+            modelBuilder.Entity<Role>()
+                .HasData(new Role[] { 
+                    new Role { Id = 1, Name = "Admin" }, 
+                    new Role { Id = 2, Name = "Teacher" }, 
+                    new Role { Id = 3, Name = "Student" } 
+                });
         }
     }
 }

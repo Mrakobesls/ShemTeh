@@ -1,0 +1,24 @@
+﻿@using ShemTeh.Business.Models.Independent
+@model TestResults
+
+<div>
+    @Html.HiddenFor(model => model.TestId)
+    <h1>Пользователи</h1>
+</div>
+     @Html.ActionLink("Вернуться к тесту", "EditTest", "Test",
+    new { studentId = @User.Claims.First(c => c.Type == "Id").Value },
+    new { type = "button", @class = "btn btn-outline-dark", @style = "margin-top:30px;" })
+<div>
+    <table class="table">
+        @for (int i = 0; i < Model.Results.Count; ++i)
+        {
+            <tr>
+                <th>@Html.HiddenFor(model => model.Results[i].UserId)</th>
+                <th>@Html.DisplayFor(model => model.Results[i].FirstName)</th>
+                <th>@Html.DisplayFor(model => model.Results[i].LastName)</th>
+                <th>@Html.DisplayFor(model => model.Results[i].Percent)%</th>
+                <th>@Html.DisplayFor(model => model.Results[i].DateTimeUtc)</th>
+            </tr>
+        }
+    </table>
+</div>

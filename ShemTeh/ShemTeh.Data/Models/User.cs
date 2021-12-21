@@ -23,5 +23,12 @@ namespace ShemTeh.Data.Models
         public string LastName { get; set; }
         [Required]
         public int Group { get; set; }
+        [Required]
+        public int RoleId { get; set; }
+
+        [ForeignKey("RoleId")]
+        public virtual Role Role { get; set; }
+        public virtual ICollection<TestAssignee> TestAssignees { get; set; }
+        public virtual ICollection<TestResult> TestResults { get; set; }
     }
 }

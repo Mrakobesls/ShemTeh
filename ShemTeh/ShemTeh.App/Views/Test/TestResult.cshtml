@@ -1,1 +1,16 @@
-﻿
+﻿@using ShemTeh.App.Models.Test
+@model TestResultResponse
+
+
+<div>
+    Тест @Html.DisplayFor(model => model.TestName) окончен
+</div>
+<div>
+    Набранный процент @Html.DisplayFor(model => model.Percentage)%
+</div>
+
+<td>
+    @Html.ActionLink("Вернуться к тестам", "EditTest", "Test", 
+    new { studentId = @User.Claims.First(c => c.Type == "Id").Value }, 
+    new { type = "button", @class = "btn btn-outline-dark", @style = "margin-top:30px;" })
+</td>

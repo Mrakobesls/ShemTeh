@@ -11,6 +11,8 @@ namespace ShemTeh.Data.UnitOfWork
         IGenericRepository<QuestionAnswer> QuestionAnswers { get; }
         IGenericRepository<TestAssignee> TestAssignees { get; }
         IGenericRepository<TestResult> TestResults { get; }
+        IGenericRepository<User> Users { get; }
+        IGenericRepository<Role> Roles { get; }
 
         void SaveChanges();
         StDbContext GetContext();

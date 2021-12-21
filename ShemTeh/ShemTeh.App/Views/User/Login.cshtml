@@ -1,0 +1,25 @@
+﻿@using ShemTeh.App.Models.User
+@model LoginModel
+
+<h2>Вход на сайт</h2>
+
+<a asp-action="Register" asp-controller="Account">Регистрация</a>
+
+@using (Html.BeginForm("Login", "User", FormMethod.Post))
+{
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    <div>
+        <div class="form-group">
+            <label>Введите Login</label><br/>
+            @Html.EditorFor(l=>l.Login)
+        </div>
+        <div class="form-group">
+            <label asp-for="Password">Введите пароль</label><br/>
+            @Html.EditorFor(l => l.Password)
+            <span asp-validation-for="Password" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Войти" class="btn btn-outline-dark" />
+        </div>
+    </div>
+}

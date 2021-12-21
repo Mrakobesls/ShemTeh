@@ -1,0 +1,30 @@
+﻿@using ShemTeh.App.Models.Test
+@model TestsResponse
+
+</div>
+<br />
+<div class="text-center">
+    @if (Model.Tests.Count() == 0)
+    {
+        <div>Нет тестов</div>
+    }
+    else
+    {
+        <table class="table">
+            <tr>
+                <th>Тест</th>
+                <th></th>
+            </tr>
+            @foreach (var test in Model.Tests)
+            {
+                <tr>
+                    <td>@test.Name</td>
+                    <td>
+                        @Html.ActionLink("Пройти", "PassTest", "Test", new { testId = test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+
+</div>

@@ -25,6 +25,12 @@ namespace ShemTeh.Data.UnitOfWork
         public IGenericRepository<TestResult> _testResults;
         public IGenericRepository<TestResult> TestResults => _testResults ??= new GenericRepository<TestResult>(_context);
 
+        public IGenericRepository<User> _users;
+        public IGenericRepository<User> Users => _users ??= new GenericRepository<User>(_context);
+
+        public IGenericRepository<Role> _roles;
+        public IGenericRepository<Role> Roles => _roles ??= new GenericRepository<Role>(_context);
+
         public UnitOfWork(StDbContext context)
         {
             _context = context;

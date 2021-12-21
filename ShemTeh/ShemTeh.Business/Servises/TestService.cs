@@ -13,7 +13,6 @@ namespace ShemTeh.Business.Servises
             _uow = unitOfWork;
         }
 
-
         public int Add(TestDto entity)
         {
             Test entityDb = entity;
@@ -33,6 +32,13 @@ namespace ShemTeh.Business.Servises
         {
             return _uow.Tests.ReadAll()
                 .Select(c => (TestDto)c).ToList();
+        }
+
+        public List<TestDto> StudentTests(int studentId)
+        {
+            return _uow.GetContext().Tests.Include(t => t.TestAssignees)
+                .Where(t => t.TestAssignees.Any(ta => ta.UserId == studentId))
+                .Select(t => (TestDto)t).ToList();
         }
 
         public TestDto ReadByName(string name)
@@ -86,5 +92,41 @@ namespace ShemTeh.Business.Servises
                     }).ToList()
                 }).First();
         }
+
+        public Models.Independent.TestAssignees GetTestAssignees(int testId)
+        {
+            return new Models.Independent.TestAssignees()
+            {
+                TestId = testId,
+                Assignees = _uow.GetContext().Users
+                .Include(u => u.TestAssignees)
+                .Select(ta => new Models.Independent.TestAssignee()
+                {
+                    UserId = ta.Id,
+                    FirstName = ta.FirstName,
+                    LastName = ta.LastName,
+                    IsAssigned = ta.TestAssignees.Any(u => u.UserId == ta.Id)
+                }).ToList()
+            };
+        }
+
+        public Models.Independent.TestResults GetTestResults(int testId)
+        {
+            return new Models.Independent.TestResults()
+            {
+                TestId = testId,
+                Results = _uow.GetContext().TestResults
+                .Include(u => u.User)
+                .Select(ta => new Models.Independent.TestResult()
+                {
+                    UserId = ta.User.Id,
+                    FirstName = ta.User.FirstName,
+                    LastName = ta.User.LastName,
+                    Percent = (int)(100 * ta.CorrectAnswersPercent),
+                    DateTimeUtc = ta.DateTimeUtc
+                }).ToList()
+            };
+        }
+
     }
 }

@@ -9,5 +9,8 @@ namespace ShemTeh.Business.Servises
         List<TestDto> GetAllTestsPage(int pageSize, int page);
         TestDto ReadByName(string name);
         TestToPass GetTestToPass(int testId);
+        List<TestDto> StudentTests(int studentId);
+        TestAssignees GetTestAssignees(int testId);
+        TestResults GetTestResults(int testId);
     }
 }

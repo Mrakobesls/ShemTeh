@@ -15,15 +15,18 @@ namespace ShemTeh.App.Controllers
         private readonly ITestService _testService;
         private readonly IQuestionService _questionService;
         private readonly IQuestionAnswerService _questionAnswerService;
+        private readonly ITestAssigneeService _testAssigneeService;
 
         public TestController(ITestService testService,
             IQuestionService questionService,
             IQuestionAnswerService questionAnswerService,
+            ITestAssigneeService testAssigneeService,
             IOptions<PagerOptions> options)
         {
             _testService = testService;
             _questionService = questionService;
             _questionAnswerService = questionAnswerService;
+            _testAssigneeService = testAssigneeService;
             _pagerOptions = options.Value;
         }
 
@@ -200,6 +203,60 @@ namespace ShemTeh.App.Controllers
 
             return EditQuestion(model.Question.Id);
         }
+
+        [HttpGet]
+        public IActionResult TestAssignees(int testid)
+        {
+            var model = _testService.GetTestAssignees(testid);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult TestAssignees(Business.Models.Independent.TestAssignees model)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var assignee in model.Assignees)
+                {
+                    if (assignee.IsAssigned)
+                    {
+                        if (_testAssigneeService.Read(model.TestId, assignee.UserId) is null)
+                        {
+                            _testAssigneeService.Add(new TestAssigneeDto
+                            {
+                                TestId = model.TestId,
+                                UserId = assignee.UserId,
+                                PossibleAttempts = 1,
+                                CurrentAttempts = 0
+                            });
+                        }
+                    }
+                    else
+                    {
+                        if (_testAssigneeService.Read(model.TestId, assignee.UserId) is not null)
+                        {
+                            _testAssigneeService.Delete(model.TestId, assignee.UserId);
+                        }
+                    }
+
+                }
+
+                return TestAssignees(model.TestId);
+            }
+
+            return TestAssignees(model.TestId);
+        }
+
+
+
+        [HttpGet]
+        public IActionResult TestResults(int testid)
+        {
+            var model = _testService.GetTestResults(testid);
+
+            return View(model);
+        }
         #endregion
 
         #region Student
@@ -226,26 +283,13 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpGet]
-        public IActionResult MyTests(int page = 1)
+        public IActionResult MyTests(int studentId)
         {
             //TODO get questions
             //new method for get user tests 
-            var companiesCount = _testService.TestsCount();
-            var pager = new Pager(companiesCount, page, _pagerOptions.PageSize);
-            var source = _testService.GetAllTestsPage(_pagerOptions.PageSize, page)
-                .Select(x => new TestInfoResponse
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToList();
+            var tests = _testService.StudentTests(studentId);
 
-            var viewModel = new TestsViewPage
-            {
-                Pager = pager,
-                Tests = source
-            };
-
-            return View(viewModel);
+            return View();
         }
 
         [HttpGet]
@@ -287,6 +331,8 @@ namespace ShemTeh.App.Controllers
                 if (correctAnswerCount > 0)
                     finalScore += (double)questionScore / correctAnswerCount;
             }
+
+
 
             var model = new TestResultResponse()
             {

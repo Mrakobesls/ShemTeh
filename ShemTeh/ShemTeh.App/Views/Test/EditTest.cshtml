@@ -16,6 +16,9 @@
 }
 <br/>
 <div>
+    @Html.ActionLink("Ответы по этому тесту", "TestResposes", "Test", new { id = Model.Test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+</div>
+<div>
     @Html.ActionLink("Добавить вопрос", "CreateQuestion", "Test", new { id = Model.Test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
 </div>
 
