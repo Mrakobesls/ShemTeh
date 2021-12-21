@@ -1,4 +1,5 @@
-﻿using ShemTeh.Business.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ShemTeh.Business.Models;
 using ShemTeh.Data.Models;
 using ShemTeh.Data.UnitOfWork;
 
@@ -50,6 +51,12 @@ namespace ShemTeh.Business.Servises
             return _uow.Questions.ReadAll()
                 .Where(x => x.TestId == testId)
                 .Select(q => (QuestionDto)q).ToList();
+        }
+
+        public int GetCorrectAnswersCount(int questionId)
+        {
+            return _uow.GetContext().Questions.Include(q => q.QuestionAnswers)
+                .Select(q => q.QuestionAnswers.Sum(qa => qa.IsCorrect ? 1 : 0)).FirstOrDefault();
         }
     }
 }

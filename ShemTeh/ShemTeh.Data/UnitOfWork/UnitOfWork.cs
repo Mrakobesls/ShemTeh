@@ -19,6 +19,11 @@ namespace ShemTeh.Data.UnitOfWork
         public IGenericRepository<QuestionAnswer> _questionAnswer;
         public IGenericRepository<QuestionAnswer> QuestionAnswers => _questionAnswer ??= new GenericRepository<QuestionAnswer>(_context);
 
+        public IGenericRepository<TestAssignee> _testAssignees;
+        public IGenericRepository<TestAssignee> TestAssignees => _testAssignees ??= new GenericRepository<TestAssignee>(_context);
+
+        public IGenericRepository<TestResult> _testResults;
+        public IGenericRepository<TestResult> TestResults => _testResults ??= new GenericRepository<TestResult>(_context);
 
         public UnitOfWork(StDbContext context)
         {
@@ -27,6 +32,11 @@ namespace ShemTeh.Data.UnitOfWork
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public StDbContext GetContext()
+        {
+            return _context;
         }
 
         public void Dispose()

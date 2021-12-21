@@ -29,7 +29,7 @@ namespace ShemTeh.Business.Servises
 
         public QuestionAnswerDto Read(int id)
         {
-            throw new NotImplementedException();
+            return _uow.QuestionAnswers.Read(id);
         }
 
         public List<QuestionAnswerDto> ReadAll()

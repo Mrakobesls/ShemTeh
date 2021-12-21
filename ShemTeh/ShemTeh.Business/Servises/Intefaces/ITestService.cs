@@ -1,4 +1,5 @@
 ﻿using ShemTeh.Business.Models;
+using ShemTeh.Business.Models.Independent;
 
 namespace ShemTeh.Business.Servises
 {
@@ -7,5 +8,6 @@ namespace ShemTeh.Business.Servises
         int TestsCount();
         List<TestDto> GetAllTestsPage(int pageSize, int page);
         TestDto ReadByName(string name);
+        TestToPass GetTestToPass(int testId);
     }
 }

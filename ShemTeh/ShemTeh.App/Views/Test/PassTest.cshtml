@@ -1,0 +1,33 @@
+﻿@using ShemTeh.Business.Models.Independent
+@model TestToPass
+
+@using (Html.BeginForm("PassTest", "Test", FormMethod.Post))
+{
+    <div>
+        @Html.HiddenFor(model => model.TestId)
+        @Html.DisplayFor(model => model.Name)
+    </div>
+    <div>
+
+        @for (int i = 0; i < Model.Questions.Count; ++i)
+        {
+            @Html.HiddenFor(model => model.Questions[i].QuestionId)
+            <table class="table">
+                <tr>
+                    <td class="col-md-1 col-xs-6 col-xs-6">@(i + 1)</td>
+                    <td class="col-xs-6 col-xs-6">@Html.DisplayFor(model => model.Questions[i].Name)</td>
+                </tr>
+            </table>
+            <div style="margin-left:30px;">
+                @for (int j = 0; j < Model.Questions[i].QuestionAnswers.Count; ++j)
+                {
+                    @Html.HiddenFor(model => model.Questions[i].QuestionAnswers[j].QuestionAnswerId)
+                    @Html.CheckBoxFor(model => model.Questions[i].QuestionAnswers[j].IsCorrect, new { @style = "margin-right:20px;" })
+                    @Html.DisplayFor(model => model.Questions[i].QuestionAnswers[j].Name)
+                }
+            </div>
+        }
+    </div>
+
+    <input type="submit" value="Закончить" class="btn btn-outline-dark" style="margin-top:30px;" />
+}

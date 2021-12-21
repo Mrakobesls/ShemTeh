@@ -1,4 +1,5 @@
-﻿using ShemTeh.Business.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ShemTeh.Business.Models;
 using ShemTeh.Data.Models;
 using ShemTeh.Data.UnitOfWork;
 
@@ -61,6 +62,29 @@ namespace ShemTeh.Business.Servises
             return _uow.Tests.ReadAll()
                 .Skip((page - 1) * pageSize).Take(pageSize)
                 .Select(t => (TestDto)t).ToList();
+        }
+
+        public Models.Independent.TestToPass GetTestToPass(int testId)
+        {
+            return _uow.GetContext().Tests
+                .Include(t => t.Questions).ThenInclude(q => q.QuestionAnswers)
+                .Where(t => t.Id == testId)
+                .Select(t => new Models.Independent.TestToPass()
+                {
+                    TestId = t.Id,
+                    Name = t.Name,
+                    Questions = t.Questions.Select(q => new Models.Independent.Question
+                    {
+                        QuestionId = q.Id,
+                        Name = q.Name,
+                        QuestionAnswers = q.QuestionAnswers.Select(qa => new Models.Independent.QuestionAnswer()
+                        {
+                            QuestionAnswerId = qa.Id,
+                            Name = qa.Name
+
+                        }).ToList()
+                    }).ToList()
+                }).First();
         }
     }
 }

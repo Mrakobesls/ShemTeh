@@ -9,7 +9,10 @@ namespace ShemTeh.Data.UnitOfWork
         IGenericRepository<Test> Tests { get; }
         IGenericRepository<Question> Questions { get; }
         IGenericRepository<QuestionAnswer> QuestionAnswers { get; }
+        IGenericRepository<TestAssignee> TestAssignees { get; }
+        IGenericRepository<TestResult> TestResults { get; }
 
         void SaveChanges();
+        StDbContext GetContext();
     }
 }

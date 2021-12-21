@@ -4,6 +4,7 @@ using ShemTeh.App.Models.Pagination;
 using ShemTeh.App.Models.Pagination.Test;
 using ShemTeh.App.Models.Test;
 using ShemTeh.Business.Models;
+using ShemTeh.Business.Models.Independent;
 using ShemTeh.Business.Servises;
 
 namespace ShemTeh.App.Controllers
@@ -15,7 +16,10 @@ namespace ShemTeh.App.Controllers
         private readonly IQuestionService _questionService;
         private readonly IQuestionAnswerService _questionAnswerService;
 
-        public TestController(ITestService testService, IQuestionService questionService, IQuestionAnswerService questionAnswerService, IOptions<PagerOptions> options)
+        public TestController(ITestService testService,
+            IQuestionService questionService,
+            IQuestionAnswerService questionAnswerService,
+            IOptions<PagerOptions> options)
         {
             _testService = testService;
             _questionService = questionService;
@@ -43,6 +47,11 @@ namespace ShemTeh.App.Controllers
 
             return View(viewModel);
         }
+
+
+
+        #region Teacher
+
 
         [HttpGet]
         public IActionResult CreateTest()
@@ -191,5 +200,103 @@ namespace ShemTeh.App.Controllers
 
             return EditQuestion(model.Question.Id);
         }
+        #endregion
+
+        #region Student
+
+        [HttpGet]
+        public IActionResult StudentPageTests(int page = 1)
+        {
+            var companiesCount = _testService.TestsCount();
+            var pager = new Pager(companiesCount, page, _pagerOptions.PageSize);
+            var source = _testService.GetAllTestsPage(_pagerOptions.PageSize, page)
+                .Select(x => new TestInfoResponse
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+            var viewModel = new TestsViewPage
+            {
+                Pager = pager,
+                Tests = source
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult MyTests(int page = 1)
+        {
+            //TODO get questions
+            //new method for get user tests 
+            var companiesCount = _testService.TestsCount();
+            var pager = new Pager(companiesCount, page, _pagerOptions.PageSize);
+            var source = _testService.GetAllTestsPage(_pagerOptions.PageSize, page)
+                .Select(x => new TestInfoResponse
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+            var viewModel = new TestsViewPage
+            {
+                Pager = pager,
+                Tests = source
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult PassTest(int testId)
+        {
+            var getTest = _testService.GetTestToPass(testId);
+
+            return View(getTest);
+        }
+
+        [HttpPost]
+        public IActionResult PassTest(TestToPass testToPass)
+        {
+            double finalScore = 0;
+            foreach (var question in testToPass.Questions)
+            {
+                int questionScore = 0;
+                foreach (var answer in question.QuestionAnswers)
+                {
+                    bool expectedValue = _questionAnswerService.Read(answer.QuestionAnswerId).IsCorrect;
+                    if (expectedValue)
+                    {
+                        if (answer.IsCorrect)
+                            questionScore++;
+                        else
+                            questionScore--;
+                    }
+                    else
+                    {
+                        if (answer.IsCorrect)
+                            questionScore--;
+                    }
+                }
+                if (questionScore <= 0)
+                {
+                    questionScore = 0;
+                }
+                int correctAnswerCount = _questionService.GetCorrectAnswersCount(question.QuestionId);
+                if (correctAnswerCount > 0)
+                    finalScore += (double)questionScore / correctAnswerCount;
+            }
+
+            var model = new TestResultResponse()
+            {
+                TestName = _testService.Read(testToPass.TestId).Name,
+                Percentage = (int)(finalScore * 100)
+            };
+
+            return View("TestResult", model);
+        }
+
+        #endregion
     }
 }
