@@ -16,5 +16,6 @@ namespace ShemTeh.Data.UnitOfWork
 
         void SaveChanges();
         StDbContext GetContext();
+        void DetachAllEntities();
     }
 }

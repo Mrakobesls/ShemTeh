@@ -18,7 +18,7 @@
             @foreach (var test in Model.Tests)
             {
                 <tr>
-                    <td>@test.Name</td>
+                    <td>@Html.DisplayFor(model => test.Name)</td>
                     <td>
                         @Html.ActionLink("Пройти", "PassTest", "Test", new { testId = test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
                     </td>

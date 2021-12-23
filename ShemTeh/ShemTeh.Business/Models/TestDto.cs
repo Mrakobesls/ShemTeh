@@ -6,6 +6,7 @@ namespace ShemTeh.Business.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int TestOwnerId { get; set; }
 
         public static implicit operator TestDto(Test test)
         {
@@ -14,7 +15,8 @@ namespace ShemTeh.Business.Models
                 : new TestDto
                 {
                     Id = test.Id,
-                    Name = test.Name
+                    Name = test.Name,
+                    TestOwnerId = test.TestOwnerId
                 };
         }
 
@@ -26,7 +28,8 @@ namespace ShemTeh.Business.Models
                 : new Test
                 {
                     Id = testDto.Id,
-                    Name = testDto.Name
+                    Name = testDto.Name,
+                    TestOwnerId = testDto.TestOwnerId
                 };
         }
     }

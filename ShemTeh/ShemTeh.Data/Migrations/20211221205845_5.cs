@@ -40,6 +40,21 @@ namespace ShemTeh.Data.Migrations
                 principalTable: "Role",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 1, "Admin" });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 2, "Teacher" });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 3, "Student" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -58,6 +73,21 @@ namespace ShemTeh.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "RoleId",
                 table: "Users");
+
+            migrationBuilder.DeleteData(
+                table: "Role",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "Role",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "Role",
+                keyColumn: "Id",
+                keyValue: 3);
         }
     }
 }

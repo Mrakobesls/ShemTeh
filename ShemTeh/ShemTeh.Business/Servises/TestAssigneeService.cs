@@ -13,19 +13,16 @@ namespace ShemTeh.Business.Servises
         }
 
 
-        public int Add(TestAssigneeDto entity)
+        public void Add(TestAssigneeDto entity)
         {
-            TestAssignee entityDb = entity;
-            _uow.TestAssignees.Create(entityDb);
+            _uow.TestAssignees.Create(entity);
 
             _uow.SaveChanges();
-
-            return 0;
         }
 
-        public TestAssigneeDto Read(int testId, int userId)
+        public TestAssigneeDto Read(params int[] ids)
         {
-            return _uow.GetContext().Find<TestAssignee>(new int[] { testId, userId });
+            return _uow.GetContext().Find<TestAssignee>(ids[1], ids[0]);
         }
 
         public List<TestAssigneeDto> ReadAll()
@@ -34,14 +31,20 @@ namespace ShemTeh.Business.Servises
                 .Select(c => (TestAssigneeDto)c).ToList();
         }
 
-        public void Delete(int testId, int userId)
+        public void Delete(params int[] ids)
         {
-            _uow.GetContext().Remove(new int[] { testId, userId } );
+            _uow.GetContext().Remove(ids);
         }
 
         public void Update(TestAssigneeDto entity)
         {
-            _uow.TestAssignees.Update(entity);
+            //TestAssignee entityDb = entity;
+            //_uow.GetContext().Entry(entityDb);
+            //_uow.TestAssignees.Update(entityDb);
+
+            var temp = _uow.GetContext().TestAssignees.First(ta => ta.UserId == entity.UserId && ta.TestId == entity.TestId);
+            temp.PossibleAttempts = entity.PossibleAttempts;
+            temp.CurrentAttempts = entity.CurrentAttempts;
 
             _uow.SaveChanges();
         }

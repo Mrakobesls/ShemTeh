@@ -3,8 +3,6 @@
 
 <h2>Вход на сайт</h2>
 
-<a asp-action="Register" asp-controller="Account">Регистрация</a>
-
 @using (Html.BeginForm("Login", "User", FormMethod.Post))
 {
     <div class="validation" asp-validation-summary="ModelOnly"></div>
@@ -18,8 +16,9 @@
             @Html.EditorFor(l => l.Password)
             <span asp-validation-for="Password" />
         </div>
-        <div class="form-group">
+        <div class="form-group" style = "margin-top:15px;">
             <input type="submit" value="Войти" class="btn btn-outline-dark" />
+            @Html.ActionLink("Регистрация", "Register", "User", new { }, new { type = "button", @class = "btn btn-outline-dark", @style = "margin-left:5px;"  })
         </div>
     </div>
 }

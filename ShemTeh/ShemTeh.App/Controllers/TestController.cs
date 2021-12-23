@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ShemTeh.App.Models.Pagination;
 using ShemTeh.App.Models.Pagination.Test;
@@ -16,26 +17,31 @@ namespace ShemTeh.App.Controllers
         private readonly IQuestionService _questionService;
         private readonly IQuestionAnswerService _questionAnswerService;
         private readonly ITestAssigneeService _testAssigneeService;
+        private readonly ITestResultService _testResultService;
 
         public TestController(ITestService testService,
             IQuestionService questionService,
             IQuestionAnswerService questionAnswerService,
             ITestAssigneeService testAssigneeService,
+            ITestResultService testResultService,
             IOptions<PagerOptions> options)
         {
             _testService = testService;
             _questionService = questionService;
             _questionAnswerService = questionAnswerService;
             _testAssigneeService = testAssigneeService;
+            _testResultService = testResultService;
             _pagerOptions = options.Value;
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult PageTests(int page = 1)
         {
-            var companiesCount = _testService.TestsCount();
+            int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "Id").Value);
+            var companiesCount = _testService.TestsCount(userId);
             var pager = new Pager(companiesCount, page, _pagerOptions.PageSize);
-            var source = _testService.GetAllTestsPage(_pagerOptions.PageSize, page)
+            var source = _testService.GetAllTestsPage(_pagerOptions.PageSize, page, userId)
                 .Select(x => new TestInfoResponse
                 {
                     Id = x.Id,
@@ -51,18 +57,18 @@ namespace ShemTeh.App.Controllers
             return View(viewModel);
         }
 
-
-
         #region Teacher
 
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult CreateTest()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         public IActionResult CreateTest(CreateTestRequest model)
         {
             if (ModelState.IsValid)
@@ -83,6 +89,7 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult EditTest(int testId)
         {
             var testInfo = _testService.Read(testId);
@@ -98,13 +105,14 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         public IActionResult EditTest(EditTestRequest model)
         {
             if (ModelState.IsValid)
             {
-                var companyByName = _testService.ReadByName(model.Test.Name);
+                var testByName = _testService.ReadByName(model.Test.Name);
 
-                if (companyByName is null || companyByName.Id == model.Test.Id)
+                if (testByName is null || testByName.Id == model.Test.Id)
                 {
                     _testService.Update(model.Test);
 
@@ -117,12 +125,14 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult CreateQuestion()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         public IActionResult CreateQuestion(CreateQuestionRequest model, [FromRoute] int id)
         {
             model.TestId = id;
@@ -141,6 +151,7 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult EditQuestion(int questionId, int newRows = 0)
         {
             var questionInfo = _questionService.Read(questionId);
@@ -163,6 +174,7 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult EditQuestionAfterAdding(EditQuestionRequest model, int newRows = 0)
         {
             while (model.Answers.Count < newRows)
@@ -177,6 +189,7 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         public IActionResult EditQuestion(EditQuestionRequest model)
         {
             if (ModelState.IsValid)
@@ -189,7 +202,7 @@ namespace ShemTeh.App.Controllers
                     {
                         if (answer.Id == 0)
                         {
-                            _questionAnswerService.Add(answer);
+                            answer.Id = _questionAnswerService.Add(answer);
                         }
                         else
                         {
@@ -205,6 +218,7 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult TestAssignees(int testid)
         {
             var model = _testService.GetTestAssignees(testid);
@@ -213,6 +227,7 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         public IActionResult TestAssignees(Business.Models.Independent.TestAssignees model)
         {
             if (ModelState.IsValid)
@@ -251,6 +266,7 @@ namespace ShemTeh.App.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult TestResults(int testid)
         {
             var model = _testService.GetTestResults(testid);
@@ -261,38 +277,44 @@ namespace ShemTeh.App.Controllers
 
         #region Student
 
+        //not implemented
         [HttpGet]
+        [Authorize(Roles = "Student")]
         public IActionResult StudentPageTests(int page = 1)
         {
-            var companiesCount = _testService.TestsCount();
-            var pager = new Pager(companiesCount, page, _pagerOptions.PageSize);
-            var source = _testService.GetAllTestsPage(_pagerOptions.PageSize, page)
+            int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "id").Value);
+            var source = _testService.StudentTests(userId)
                 .Select(x => new TestInfoResponse
                 {
                     Id = x.Id,
                     Name = x.Name
                 }).ToList();
 
-            var viewModel = new TestsViewPage
-            {
-                Pager = pager,
-                Tests = source
-            };
-
-            return View(viewModel);
+            return View(source);
         }
 
         [HttpGet]
-        public IActionResult MyTests(int studentId)
+        [Authorize(Roles = "Student")]
+        public IActionResult MyTests()
         {
+            int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "Id").Value);
             //TODO get questions
             //new method for get user tests 
-            var tests = _testService.StudentTests(studentId);
+            var source = new TestsResponse()
+            {
+                Tests = _testService.StudentTests(userId)
+                    .Select(x => new TestInfoResponse
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList()
+            };
 
-            return View();
+            return View(source);
         }
 
         [HttpGet]
+        [Authorize(Roles = "Student")]
         public IActionResult PassTest(int testId)
         {
             var getTest = _testService.GetTestToPass(testId);
@@ -301,38 +323,53 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Student")]
         public IActionResult PassTest(TestToPass testToPass)
         {
+            int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "Id").Value);
             double finalScore = 0;
             foreach (var question in testToPass.Questions)
             {
-                int questionScore = 0;
+                double questionScore = 0;
+                int correctAnswerCount = _questionService.GetCorrectAnswersCount(question.QuestionId);
+                int incorrectAnswerCount = _questionService.GetIncorrectAnswersCount(question.QuestionId);
                 foreach (var answer in question.QuestionAnswers)
                 {
                     bool expectedValue = _questionAnswerService.Read(answer.QuestionAnswerId).IsCorrect;
                     if (expectedValue)
                     {
                         if (answer.IsCorrect)
-                            questionScore++;
-                        else
-                            questionScore--;
+                            questionScore += 1.0 / correctAnswerCount;
+                        //else
+                        //    questionScore -= 1.0 / correctAnswerCount;
                     }
                     else
                     {
                         if (answer.IsCorrect)
-                            questionScore--;
+                            questionScore -= 1.0 / incorrectAnswerCount;
                     }
                 }
                 if (questionScore <= 0)
                 {
                     questionScore = 0;
                 }
-                int correctAnswerCount = _questionService.GetCorrectAnswersCount(question.QuestionId);
-                if (correctAnswerCount > 0)
-                    finalScore += (double)questionScore / correctAnswerCount;
+                finalScore += questionScore;
             }
 
+            finalScore /= testToPass.Questions.Count();
 
+            _testResultService.Add(new TestResultDto
+            {
+                TestId = testToPass.TestId,
+                UserId = userId,
+                AttemptNumber = 1,
+                CorrectAnswersPercent = finalScore,
+                DateTimeUtc = DateTime.UtcNow
+            });
+
+            var testAssignee = _testAssigneeService.Read(testToPass.TestId, userId);
+            testAssignee.CurrentAttempts += 1;
+            _testAssigneeService.Update(testAssignee);
 
             var model = new TestResultResponse()
             {

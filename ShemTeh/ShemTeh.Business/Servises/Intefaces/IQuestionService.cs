@@ -6,5 +6,6 @@ namespace ShemTeh.Business.Servises
     {
         List<QuestionDto> ReadAllByTestId(int testId);
         int GetCorrectAnswersCount(int questionId);
+        int GetIncorrectAnswersCount(int questionId);
     }
 }

@@ -5,8 +5,8 @@ namespace ShemTeh.Business.Servises
 {
     public interface ITestService : IGenericService<TestDto>
     {
-        int TestsCount();
-        List<TestDto> GetAllTestsPage(int pageSize, int page);
+        int TestsCount(int userId);
+        List<TestDto> GetAllTestsPage(int pageSize, int page, int userId);
         TestDto ReadByName(string name);
         TestToPass GetTestToPass(int testId);
         List<TestDto> StudentTests(int studentId);

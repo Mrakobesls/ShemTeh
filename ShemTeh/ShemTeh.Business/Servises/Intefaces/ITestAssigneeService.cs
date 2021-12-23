@@ -4,13 +4,13 @@ namespace ShemTeh.Business.Servises
 {
     public interface ITestAssigneeService
     {
-        int Add(TestAssigneeDto entity);
+        void Add(TestAssigneeDto entity);
 
-        TestAssigneeDto Read(int testId, int userId);
+        TestAssigneeDto Read(params int[] ids);
 
         List<TestAssigneeDto> ReadAll();
 
-        void Delete(int testId, int userId);
+        void Delete(params int[] ids);
 
         void Update(TestAssigneeDto entity);
     }

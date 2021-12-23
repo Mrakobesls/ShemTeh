@@ -5,6 +5,7 @@
 {
     <div>
         @Html.HiddenFor(model => model.Test.Id)
+        @Html.HiddenFor(model => model.Test.TestOwnerId)
         @Html.HiddenFor(model => model.Questions)
         <div class="form-group">
             <label asp-for="@Model.Test.Name">Название теста</label><br />
@@ -16,7 +17,10 @@
 }
 <br/>
 <div>
-    @Html.ActionLink("Ответы по этому тесту", "TestResposes", "Test", new { id = Model.Test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+    @Html.ActionLink("Пользователи теста", "TestAssignees", "Test", new { testId = Model.Test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
+</div>
+<div>
+    @Html.ActionLink("Ответы по этому тесту", "TestResults", "Test", new { testId = Model.Test.Id }, new { type = "button", @class = "btn btn-outline-dark" })
 </div>
 <div>
     @Html.ActionLink("Добавить вопрос", "CreateQuestion", "Test", new { id = Model.Test.Id }, new { type = "button", @class = "btn btn-outline-dark" })

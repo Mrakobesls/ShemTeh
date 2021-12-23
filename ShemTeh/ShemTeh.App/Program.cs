@@ -17,6 +17,7 @@ builder.Services.AddScoped<ITestAssigneeService, TestAssigneeService>();
 builder.Services.AddScoped<ITestResultService, TestResultService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordCrypt, PasswordCrypt>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions

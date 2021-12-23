@@ -16,7 +16,6 @@ namespace ShemTeh.App.Models.User
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Введите группу")]
-        [MaxLength(500)]
         public int Group { get; set; }
 
         [Required(ErrorMessage = "Не указан пароль")]

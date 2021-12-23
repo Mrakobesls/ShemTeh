@@ -21,9 +21,11 @@
             <div style="margin-left:30px;">
                 @for (int j = 0; j < Model.Questions[i].QuestionAnswers.Count; ++j)
                 {
-                    @Html.HiddenFor(model => model.Questions[i].QuestionAnswers[j].QuestionAnswerId)
-                    @Html.CheckBoxFor(model => model.Questions[i].QuestionAnswers[j].IsCorrect, new { @style = "margin-right:20px;" })
-                    @Html.DisplayFor(model => model.Questions[i].QuestionAnswers[j].Name)
+                    <div>
+                        @Html.HiddenFor(model => model.Questions[i].QuestionAnswers[j].QuestionAnswerId)
+                        @Html.CheckBoxFor(model => model.Questions[i].QuestionAnswers[j].IsCorrect, new { @style = "margin-right:20px;" })
+                        @Html.DisplayFor(model => model.Questions[i].QuestionAnswers[j].Name)
+                    </div>
                 }
             </div>
         }

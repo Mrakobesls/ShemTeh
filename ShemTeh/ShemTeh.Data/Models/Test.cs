@@ -10,6 +10,10 @@ namespace ShemTeh.Data.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        [Required]
+        public int TestOwnerId { get; set; }
+        //[ForeignKey("TestOwnerId")]
+        //public virtual User TestOwner { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<TestAssignee> TestAssignees { get; set; }
         public virtual ICollection<TestResult> TestResults { get; set; }

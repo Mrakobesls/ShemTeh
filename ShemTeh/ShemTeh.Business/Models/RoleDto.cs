@@ -11,7 +11,7 @@ namespace ShemTeh.Business.Models
         {
             return role is null
                 ? null
-                : new Role
+                : new RoleDto
                 {
                     Id = role.Id,
                     Name = role.Name

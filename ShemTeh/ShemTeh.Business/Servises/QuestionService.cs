@@ -55,8 +55,14 @@ namespace ShemTeh.Business.Servises
 
         public int GetCorrectAnswersCount(int questionId)
         {
-            return _uow.GetContext().Questions.Include(q => q.QuestionAnswers)
+            return _uow.GetContext().Questions.Include(q => q.QuestionAnswers).Where(q=>q.Id == questionId)
                 .Select(q => q.QuestionAnswers.Sum(qa => qa.IsCorrect ? 1 : 0)).FirstOrDefault();
+        }
+
+        public int GetIncorrectAnswersCount(int questionId)
+        {
+            return _uow.GetContext().Questions.Include(q => q.QuestionAnswers).Where(q=>q.Id == questionId)
+                .Select(q => q.QuestionAnswers.Sum(qa => qa.IsCorrect ? 0 : 1)).FirstOrDefault();
         }
     }
 }

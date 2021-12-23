@@ -37,7 +37,7 @@ namespace ShemTeh.Business.Servises
         public List<TestDto> StudentTests(int studentId)
         {
             return _uow.GetContext().Tests.Include(t => t.TestAssignees)
-                .Where(t => t.TestAssignees.Any(ta => ta.UserId == studentId))
+                .Where(t => t.TestAssignees.Any(ta => ta.UserId == studentId && ta.CurrentAttempts < ta.PossibleAttempts))
                 .Select(t => (TestDto)t).ToList();
         }
 
@@ -53,19 +53,21 @@ namespace ShemTeh.Business.Servises
 
         public void Update(TestDto entity)
         {
-            _uow.Tests.Update(entity);
+            Test entityDb = entity;
+            _uow.GetContext().Entry(entityDb);
+            _uow.Tests.Update(entityDb);
 
             _uow.SaveChanges();
         }
 
-        public int TestsCount()
+        public int TestsCount(int userId)
         {
-            return _uow.Tests.ReadAll().Count();
+            return _uow.Tests.ReadAll().Where(t => t.TestOwnerId == userId).Count();
         }
 
-        public List<TestDto> GetAllTestsPage(int pageSize, int page)
+        public List<TestDto> GetAllTestsPage(int pageSize, int page, int userId)
         {
-            return _uow.Tests.ReadAll()
+            return _uow.Tests.ReadAll().Where(t => t.TestOwnerId == userId)
                 .Skip((page - 1) * pageSize).Take(pageSize)
                 .Select(t => (TestDto)t).ToList();
         }
@@ -100,6 +102,7 @@ namespace ShemTeh.Business.Servises
                 TestId = testId,
                 Assignees = _uow.GetContext().Users
                 .Include(u => u.TestAssignees)
+                .Where(u => u.RoleId == 3)
                 .Select(ta => new Models.Independent.TestAssignee()
                 {
                     UserId = ta.Id,

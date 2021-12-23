@@ -66,9 +66,9 @@ namespace ShemTeh.App.Controllers
                         RoleId = 3
                     });
 
-                    var account = _userService.ReadByLogin(model.Login);
+                    var user = _userService.ReadByLogin(model.Login);
 
-                    await Authorize(account);
+                    await Authorize(user);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -85,7 +85,7 @@ namespace ShemTeh.App.Controllers
             {
                 new Claim("Id", user.Id.ToString()),
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, _roleService.Read(user.Id).Name)
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, _roleService.Read(user.RoleId).Name)
             };
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
@@ -95,7 +95,7 @@ namespace ShemTeh.App.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "User");
         }
     }
 }

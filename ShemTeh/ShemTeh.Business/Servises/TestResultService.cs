@@ -12,20 +12,16 @@ namespace ShemTeh.Business.Servises
             _uow = unitOfWork;
         }
 
-
-        public int Add(TestResultDto entity)
+        public void Add(TestResultDto entity)
         {
-            TestResult entityDb = entity;
-            _uow.TestResults.Create(entityDb);
+            _uow.TestResults.Create(entity);
 
             _uow.SaveChanges();
-
-            return 0;
         }
 
-        public TestResultDto Read(int id)
+        public TestResultDto Read(params int[] ids)
         {
-            return _uow.TestResults.Read(id);
+            return _uow.GetContext().Find<TestResult>(ids[1], ids[0]);
         }
 
         public List<TestResultDto> ReadAll()
@@ -34,9 +30,9 @@ namespace ShemTeh.Business.Servises
                 .Select(c => (TestResultDto)c).ToList();
         }
 
-        public void Delete(int id)
+        public void Delete(params int[] ids)
         {
-            throw new NotImplementedException();
+            _uow.GetContext().Remove(ids);
         }
 
         public void Update(TestResultDto entity)

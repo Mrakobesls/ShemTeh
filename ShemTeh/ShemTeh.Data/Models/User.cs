@@ -25,10 +25,10 @@ namespace ShemTeh.Data.Models
         public int Group { get; set; }
         [Required]
         public int RoleId { get; set; }
-
         [ForeignKey("RoleId")]
         public virtual Role Role { get; set; }
         public virtual ICollection<TestAssignee> TestAssignees { get; set; }
         public virtual ICollection<TestResult> TestResults { get; set; }
+        //public virtual ICollection<Test> Tests { get; set; }
     }
 }

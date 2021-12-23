@@ -49,5 +49,10 @@ namespace ShemTeh.Data.UnitOfWork
         {
             _context?.Dispose();
         }
+
+        public void DetachAllEntities()
+        {
+            _context.ChangeTracker.Clear();
+        }
     }
 }
