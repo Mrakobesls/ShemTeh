@@ -75,9 +75,11 @@ namespace ShemTeh.App.Controllers
             {
                 if (_testService.ReadByName(model.Name) is null)
                 {
+                    int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "Id").Value);
                     int testId = _testService.Add(new TestDto()
                     {
-                        Name = model.Name
+                        Name = model.Name,
+                        TestOwnerId= userId
                     });
 
                     return RedirectToAction("EditTest", "Test", new { testId = testId });
@@ -282,7 +284,7 @@ namespace ShemTeh.App.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult StudentPageTests(int page = 1)
         {
-            int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "id").Value);
+            int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "Id").Value);
             var source = _testService.StudentTests(userId)
                 .Select(x => new TestInfoResponse
                 {
