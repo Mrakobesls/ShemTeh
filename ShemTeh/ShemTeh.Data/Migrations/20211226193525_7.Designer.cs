@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShemTeh.Data;
 
@@ -11,9 +12,10 @@ using ShemTeh.Data;
 namespace ShemTeh.Data.Migrations
 {
     [DbContext(typeof(StDbContext))]
-    partial class StDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211226193525_7")]
+    partial class _7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +48,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("ShemTeh.Data.Models.QuestionAnswer", b =>
@@ -71,7 +73,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionAnswers", (string)null);
+                    b.ToTable("QuestionAnswers");
                 });
 
             modelBuilder.Entity("ShemTeh.Data.Models.QuestionType", b =>
@@ -88,7 +90,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QuestionTypes", (string)null);
+                    b.ToTable("QuestionTypes");
 
                     b.HasData(
                         new
@@ -118,7 +120,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role", (string)null);
+                    b.ToTable("Role");
 
                     b.HasData(
                         new
@@ -155,7 +157,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tests", (string)null);
+                    b.ToTable("Tests");
                 });
 
             modelBuilder.Entity("ShemTeh.Data.Models.TestAssignee", b =>
@@ -176,7 +178,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("TestAssignees", (string)null);
+                    b.ToTable("TestAssignees");
                 });
 
             modelBuilder.Entity("ShemTeh.Data.Models.TestResult", b =>
@@ -200,7 +202,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("TestResults", (string)null);
+                    b.ToTable("TestResults");
                 });
 
             modelBuilder.Entity("ShemTeh.Data.Models.User", b =>
@@ -241,7 +243,7 @@ namespace ShemTeh.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new

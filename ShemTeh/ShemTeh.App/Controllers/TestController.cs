@@ -35,7 +35,7 @@ namespace ShemTeh.App.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Teacher")]
         public IActionResult PageTests(int page = 1)
         {
             int userId = Int32.Parse(HttpContext.User.Claims.First(c => c.Type == "Id").Value);

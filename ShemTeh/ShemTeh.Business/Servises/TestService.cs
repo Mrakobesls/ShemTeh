@@ -88,8 +88,7 @@ namespace ShemTeh.Business.Servises
                         QuestionAnswers = q.QuestionAnswers.Select(qa => new Models.Independent.QuestionAnswer()
                         {
                             QuestionAnswerId = qa.Id,
-                            Name = qa.Name
-
+                            Name = qa.IsCorrect ? qa.Name + "." : qa.Name
                         }).ToList()
                     }).ToList()
                 }).First();
